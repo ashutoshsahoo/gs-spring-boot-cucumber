@@ -1,6 +1,7 @@
-package com.ashu.practice.common;
+package com.ashu.practice.steps;
 
-import com.ashu.practice.GsSpringBootCucumberApplication;
+import com.ashu.practice.common.HeaderSettingRequestCallback;
+import com.ashu.practice.common.ResponseResults;
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +16,7 @@ import java.util.Map;
 
 @CucumberContextConfiguration
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class SpringIntegrationTest {
+public class SpringCucumberIntegrationSteps {
 
     protected static ResponseResults latestResponse = null;
 
@@ -38,7 +39,7 @@ public class SpringIntegrationTest {
         });
     }
 
-    protected void executePost() throws IOException {
+    protected void executePost(String url) throws IOException {
         final Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
         final HeaderSettingRequestCallback requestCallback = new HeaderSettingRequestCallback(headers);
@@ -50,7 +51,7 @@ public class SpringIntegrationTest {
 
         restTemplate.setErrorHandler(errorHandler);
         latestResponse = restTemplate
-                .execute("http://localhost:8082/baeldung", HttpMethod.POST, requestCallback, response -> {
+                .execute(url, HttpMethod.POST, requestCallback, response -> {
                     if (errorHandler.hadError) {
                         return (errorHandler.getResults());
                     } else {

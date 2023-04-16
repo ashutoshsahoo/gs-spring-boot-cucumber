@@ -1,4 +1,4 @@
-package com.ashu.practice.common.config;
+package com.ashu.practice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

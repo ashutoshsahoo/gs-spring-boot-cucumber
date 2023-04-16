@@ -1,7 +1,7 @@
-package com.ashu.practice.common.steps;
+package com.ashu.practice.steps;
 
-import com.ashu.practice.common.SpringIntegrationTest;
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.springframework.http.HttpStatusCode;
@@ -9,17 +9,12 @@ import org.springframework.http.HttpStatusCode;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class StepDefsIntegrationTest extends SpringIntegrationTest {
+public class VersionApplicationSteps extends SpringCucumberIntegrationSteps {
 
-//    @When("^the client calls /baeldung$")
-//    public void the_client_issues_POST_hello() throws Throwable {
-//        executePost();
-//    }
-
-//    @Given("^the client calls /hello$")
-//    public void the_client_issues_GET_hello() throws Throwable {
-//        executeGet("http://localhost:8080/hello");
-//    }
+    @Given("^the client calls /hello$")
+    public void the_client_issues_GET_hello() throws Throwable {
+        executeGet("http://localhost:8080/hello");
+    }
 
     @When("^the client calls /version$")
     public void the_client_issues_GET_version() throws Throwable {
@@ -33,7 +28,7 @@ public class StepDefsIntegrationTest extends SpringIntegrationTest {
     }
 
     @And("^the client receives server version (.+)$")
-    public void the_client_receives_server_version_body(String version) throws Throwable {
+    public void the_client_receives_server_version_body(String version) {
         assertThat(latestResponse.getBody(), is(version));
     }
 }

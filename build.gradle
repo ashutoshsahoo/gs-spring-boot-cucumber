@@ -9,12 +9,6 @@ group = 'com.ashu.practice'
 version = '1.0.0-SNAPSHOT'
 sourceCompatibility = '17'
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
 repositories {
     mavenCentral()
 }
@@ -32,20 +26,22 @@ dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//	testImplementation "io.cucumber:cucumber-core:${cucumberVersion}"
     testImplementation "io.cucumber:cucumber-java:${cucumberVersion}"
-    testImplementation "io.cucumber:cucumber-junit:${cucumberVersion}"
     testImplementation "io.cucumber:cucumber-spring:${cucumberVersion}"
 }
 
-
 configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
     cucumberRuntime {
         extendsFrom testImplementation
     }
 }
 
-tasks.register('cucumberCli') {
+tasks.register('cucumberRun') {
+    group 'Application'
+    description 'Runs Cucumber Integration Tests.'
     dependsOn assemble, testClasses
     doLast {
         javaexec {
@@ -54,22 +50,11 @@ tasks.register('cucumberCli') {
             args = [
                     '--plugin', 'pretty',
                     '--plugin', 'html:build/cucumber/cucumber-report.html',
-                    '--glue', 'com.ashu.practice.common',
+                    '--glue', 'com.ashu.practice',
                     'src/test/resources']
         }
     }
 }
-
-//
-//tasks.named('test') {
-//    useJUnitPlatform()
-//
-//    testLogging {
-//        events TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED
-//    }
-//
-//    systemProperties(project.gradle.startParameter.systemPropertiesArgs)
-//}
 
 
 idea {

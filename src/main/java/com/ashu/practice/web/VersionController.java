@@ -13,4 +13,9 @@ public class VersionController {
         log.info("Version endpoint called");
         return "1.0";
     }
+
+    @GetMapping("/hello")
+    public String sayHello() {
+        return "hello";
+    }
 }
