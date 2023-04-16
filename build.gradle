@@ -1,0 +1,80 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.0.5'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'idea'
+}
+
+group = 'com.ashu.practice'
+version = '1.0.0-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    cucumberVersion = '7.11.2'
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'org.apache.commons:commons-lang3'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.h2database:h2'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//	testImplementation "io.cucumber:cucumber-core:${cucumberVersion}"
+    testImplementation "io.cucumber:cucumber-java:${cucumberVersion}"
+    testImplementation "io.cucumber:cucumber-junit:${cucumberVersion}"
+    testImplementation "io.cucumber:cucumber-spring:${cucumberVersion}"
+}
+
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
+tasks.register('cucumberCli') {
+    dependsOn assemble, testClasses
+    doLast {
+        javaexec {
+            mainClass = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = [
+                    '--plugin', 'pretty',
+                    '--plugin', 'html:build/cucumber/cucumber-report.html',
+                    '--glue', 'com.ashu.practice.common',
+                    'src/test/resources']
+        }
+    }
+}
+
+//
+//tasks.named('test') {
+//    useJUnitPlatform()
+//
+//    testLogging {
+//        events TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED
+//    }
+//
+//    systemProperties(project.gradle.startParameter.systemPropertiesArgs)
+//}
+
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
